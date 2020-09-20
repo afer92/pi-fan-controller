@@ -47,9 +47,5 @@ if __name__ == '__main__':
     fan.on()
 
     while True:
-        voltage = get_voltage()
-        if voltage == 0.0: fan.off()
-        else:
-            fan.on()
-            fan.value = voltage
+        fan.value = get_voltage()
         time.sleep(SLEEP_INTERVAL)
