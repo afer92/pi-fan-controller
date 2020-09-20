@@ -3,12 +3,12 @@
 import subprocess
 import time
 
-from gpiozero import OutputDevice
+from gpiozero import PWMLED
 
 
-ON_THRESHOLD = 65  # (degrees Celsius) Fan kicks on at this temperature.
-OFF_THRESHOLD = 55  # (degress Celsius) Fan shuts off at this temperature.
-SLEEP_INTERVAL = 5  # (seconds) How often we check the core temperature.
+TEMP_MIN = 42 # Temperature (or lower) where fan voltage is 0.0
+TEMP_MAX = 52 # Temperature (or higher) where van voltage is 1.0
+SLEEP_INTERVAL = 2  # (seconds) How often we check the core temperature.
 GPIO_PIN = 18  # Which GPIO pin you're using to control the fan.
 
 
@@ -30,26 +30,26 @@ def get_temp():
     except (IndexError, ValueError):
         raise RuntimeError('Could not parse temperature output.')
 
+def get_voltage():
+    r = TEMP_MAX - TEMP_MIN
+    v = get_temp() - TEMP_MIN
+    v = v / r
+    if v < 0.0001: return 0.0
+    elif v > 0.9998: return 1.0
+    else: return v
 
 if __name__ == '__main__':
-    # Validate the on and off thresholds
-    if OFF_THRESHOLD >= ON_THRESHOLD:
-        raise RuntimeError('OFF_THRESHOLD must be less than ON_THRESHOLD')
+    # Validate
+    if TEMP_MIN >= TEMP_MAX:
+        raise RuntimeError('TEMP_MIN must be less than TEMP_MAX')
 
-    fan = OutputDevice(GPIO_PIN)
+    fan = PWMLED(GPIO_PIN)
+    fan.on()
 
     while True:
-        temp = get_temp()
-
-        # Start the fan if the temperature has reached the limit and the fan
-        # isn't already running.
-        # NOTE: `fan.value` returns 1 for "on" and 0 for "off"
-        if temp > ON_THRESHOLD and not fan.value:
+        voltage = get_voltage()
+        if voltage == 0.0: fan.off()
+        else:
             fan.on()
-
-        # Stop the fan if the fan is running and the temperature has dropped
-        # to 10 degrees below the limit.
-        elif fan.value and temp < OFF_THRESHOLD:
-            fan.off()
-
+            fan.value = voltage
         time.sleep(SLEEP_INTERVAL)
