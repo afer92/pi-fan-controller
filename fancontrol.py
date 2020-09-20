@@ -6,7 +6,7 @@ import time
 from gpiozero import PWMLED
 
 
-TEMP_MIN = 39 # Temperature (or lower) where fan voltage is 0.0
+TEMP_MIN = 40 # Temperature (or lower) where fan voltage is 0.0
 TEMP_MAX = 49 # Temperature (or higher) where van voltage is 1.0
 SLEEP_INTERVAL = 2  # (seconds) How often we check the core temperature.
 GPIO_PIN = 18  # Which GPIO pin you're using to control the fan.
