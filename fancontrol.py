@@ -77,7 +77,8 @@ def main():
     parser.add_argument("-P", "--percent_high",
                         help="HIGH_PERCENT", type=float)
     parser.add_argument("-t", "--test",
-                        help="test with parameters", type=int)
+                        help="""run TEST cycles and
+                                display temperature and voltage""", type=int)
     args = parser.parse_args()
 
     if args.infos:
