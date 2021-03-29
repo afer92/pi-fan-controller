@@ -29,5 +29,5 @@ optional arguments:
                         LOW_PERCENT
   -P PERCENT_HIGH, --percent_high PERCENT_HIGH
                         HIGH_PERCENT
-  -t TEST, --test TEST  test with parameters
+  -t n, --test n  test with parameters, n cycles
   ```
