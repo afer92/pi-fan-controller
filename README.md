@@ -13,7 +13,8 @@ found on our guide: [Control Your Raspberry Pi Fan (and Temperature) with Python
 
 ## Usage
 
-```usage: fancontrol.py [-h] [-i] [-v] [-m TEMP_MIN] [-M TEMP_MAX]
+```
+usage: fancontrol.py [-h] [-i] [-v] [-m TEMP_MIN] [-M TEMP_MAX]
                      [-p PERCENT_LOW] [-P PERCENT_HIGH] [-t TEST]
 
 optional arguments:
