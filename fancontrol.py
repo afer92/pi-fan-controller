@@ -89,6 +89,7 @@ def main():
     global TEMP_MAX
     global LOW_PERCENT
     global HIGH_PERCENT
+    global TEST
 
     if args.temp_min:
         TEMP_MIN = args.temp_min
