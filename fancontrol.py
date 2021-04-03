@@ -133,7 +133,7 @@ def main():
             voltage = get_voltage()
             fan.value = voltage
         if TEST:
-            print(u'temp: {} voltage: {}'.format(temp, fan.value))
+            print(u'temp: {} voltage: {}'.format(temp, fan.value), flush=True)
         time.sleep(SLEEP_INTERVAL)
 
 
