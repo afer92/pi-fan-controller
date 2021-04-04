@@ -14,7 +14,7 @@ found on our guide: [Control Your Raspberry Pi Fan (and Temperature) with Python
 
 ## Usage
 
-```python
+```sh
 fancontrol.py -h
 usage: fancontrol.py [-h] [-i] [-v] [-m TEMP_MIN] [-M TEMP_MAX]
                      [-p PERCENT_LOW] [-P PERCENT_HIGH] [-t TEST]
