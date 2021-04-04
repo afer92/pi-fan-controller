@@ -21,7 +21,7 @@ __email__ = ""
 __status__ = "Production"
 
 
-def get_temp():
+def get_temp() -> float:
     """Get the core temperature.
 
     Run a shell script to get the core temp and parse the output.
@@ -42,8 +42,14 @@ def get_temp():
               from parse_temp_output
 
 
-def get_voltage(params):
-    """ Compute voltage from cpu temp and parameters """
+def get_voltage(params: dict) -> float:
+    """ Compute voltage from cpu temp and parameters.
+    Parameters:
+        params: dict
+            User parameters for fan control
+    Returns:
+        float: 0.0 to 1.0
+    """
     delta_t = params['temp_max'] - params['temp_min']  # delta consigne
     delta_v = params['high_percent'] - params['low_percent']
     step = delta_v / delta_t
@@ -56,8 +62,14 @@ def get_voltage(params):
     return computed_v
 
 
-def print_infos(params):
-    """ Dump parameters, temperature and computed voltage """
+def print_infos(params: dict):
+    """ Dump parameters, temperature and computed voltage
+    Parameters:
+        params: dict
+            User parameters for fan control
+    Returns:
+        None
+    """
     print(u'gpio_pin : \t{}'.format(params['gpio_pin']))
     print(u'SLEEP : \t{}s'.format(params['sleep_interval']))
     print(u'temp_min : \t{}°C'.format(params['temp_min']))
@@ -99,8 +111,12 @@ def get_args():
     return parser.parse_args()
 
 
-def load_params(args):
-    """ Load params with default value and line command args """
+def load_params(args) -> dict:
+    """ Load params with default value and line command args
+
+    Returns:
+        params as a dictionnary
+    """
 
     # Default parameter values
 
