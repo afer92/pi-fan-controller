@@ -9,6 +9,18 @@ from gpiozero.pins.rpigpio import RPiGPIOFactory
 from gpiozero import PWMLED
 
 
+PI_FAN_CONTROLLER_VERSION = "1.0.0"
+
+__author__ = "Alain Ferraro (aka afer92)"
+__copyright__ = "Copyright 2021, Alain Ferraro"
+__credits__ = ["Dave Fletcher", "howchoo"]
+__license__ = "GPL"
+__version__ = PI_FAN_CONTROLLER_VERSION
+__maintainer__ = "afer92"
+__email__ = ""
+__status__ = "Production"
+
+
 def get_temp():
     """Get the core temperature.
 
@@ -66,6 +78,9 @@ def get_args():
                         help="print parameters, tempcpu and voltage",
                         action="store_true")
     parser.add_argument("-v", "--verbose",
+                        help="verbose",
+                        action="store_true")
+    parser.add_argument("-V", "--version",
                         help="verbose",
                         action="store_true")
     parser.add_argument("-m", "--temp_min",
@@ -130,6 +145,10 @@ def main():
 
     args = get_args()
     params = load_params(args)
+
+    if args.version:
+        print(u'Version : {}'.format(__version__))
+        sys.exit(0)
 
     if args.infos:
         print_infos(params)
