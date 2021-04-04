@@ -1,3 +1,4 @@
+![pylint Score](https://raw.githubusercontent.com/afer92/pi-fan-controller/78a972e18da4a190d55bf63acd713b498f845ca5/pylint.svg)
 # Pi Fan Controller
 
 Raspberry Pi fan controller.
