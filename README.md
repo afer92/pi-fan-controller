@@ -15,9 +15,10 @@ found on our guide: [Control Your Raspberry Pi Fan (and Temperature) with Python
 ## Usage
 
 ```sh
-fancontrol.py -h
-usage: fancontrol.py [-h] [-i] [-v] [-m TEMP_MIN] [-M TEMP_MAX]
-                     [-p PERCENT_LOW] [-P PERCENT_HIGH] [-t TEST]
+$ ./fancontrol.py -h
+usage: fancontrol.py [-h] [-i] [-v] [-V] [-m TEMP_MIN] [-M TEMP_MAX]
+                     [-p PERCENT_LOW] [-P PERCENT_HIGH] [-G GPIO_PIN]
+                     [-t TEST]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -25,14 +26,16 @@ optional arguments:
   -v, --verbose         verbose
   -V, --version         program version
   -m TEMP_MIN, --temp_min TEMP_MIN
-                        TEMP_MIN
+                        temp_min
   -M TEMP_MAX, --temp_max TEMP_MAX
-                        TEMP_MAX
+                        temp_max
   -p PERCENT_LOW, --percent_low PERCENT_LOW
-                        LOW_PERCENT
+                        low_percent
   -P PERCENT_HIGH, --percent_high PERCENT_HIGH
-                        HIGH_PERCENT
-  -t TEST, --test TEST  run TEST cycles and display temperature and voltage
+                        high_percent
+  -G GPIO_PIN, --gpio_pin GPIO_PIN
+                        temp_max
+  -t TEST, --test TEST  run test cycles and display temperature and voltage
   ```
 
 ## supervisor
