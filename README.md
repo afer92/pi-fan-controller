@@ -31,3 +31,50 @@ optional arguments:
                         HIGH_PERCENT
   -t TEST, --test TEST  run TEST cycles and display temperature and voltage
   ```
+
+## supervisor
+
+```
+sudo apt-get install supervisor
+```
+[How to configure supervisor](http://supervisord.org/configuration.html)
+
+fancontrol.sh
+```
+#!/bin/sh
+
+/usr/bin/python3 /usr/local/bin/fancontrol.py -m 40 -M 45 -p 0.4 -P 0.6 -v -t 60 > /home/pi/scripts/system/fancontrol.log
+
+exit 0
+```
+
+fancontrol.conf
+```
+[program:fancontrol]
+command=/home/pi/scripts/system/fancontrol.sh
+autostart=true
+autorestart=true
+startretries=3
+```
+Log:
+
+```
+cat /home/pi/scripts/system/fancontrol.log
+GPIO_PIN :      17
+SLEEP :         5s
+TEMP_MIN :      40°C
+TEMP_MAX :      45°C
+LOW_PERCENT :   0.4% (2.0V)
+HIGH_PERCENT :  0.6% (3.0V)
+CPU_TEMP :      41.3°C
+VOLTAGE :       0.45% (2.26V)
+temp: 42.3 voltage: 0.0
+temp: 41.3 voltage: 0.0
+temp: 41.8 voltage: 0.0
+temp: 41.8 voltage: 0.0
+temp: 41.8 voltage: 0.0
+temp: 43.8 voltage: 0.5319999999999999
+temp: 42.8 voltage: 0.5719999999999998
+temp: 43.8 voltage: 0.5319999999999999
+temp: 43.3 voltage: 0.5719999999999998
+```
