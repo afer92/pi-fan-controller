@@ -22,6 +22,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -i, --infos           print parameters, tempcpu and voltage
   -v, --verbose         verbose
+  -V, --version         program version
   -m TEMP_MIN, --temp_min TEMP_MIN
                         TEMP_MIN
   -M TEMP_MAX, --temp_max TEMP_MAX

@@ -81,7 +81,7 @@ def get_args():
                         help="verbose",
                         action="store_true")
     parser.add_argument("-V", "--version",
-                        help="verbose",
+                        help="program version",
                         action="store_true")
     parser.add_argument("-m", "--temp_min",
                         help="temp_min", type=int)
