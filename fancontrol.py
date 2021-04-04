@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
+""" Raspberry Pi fan controller """
 import argparse
 import subprocess
 import time
+import sys
 
+from gpiozero.pins.rpigpio import RPiGPIOFactory
 from gpiozero import PWMLED
-
-
-TEMP_MIN = 40  # Temperature (or lower) where fan voltage is 0.0
-TEMP_MAX = 50  # Temperature (or higher) where van voltage is 1.0
-SLEEP_INTERVAL = 5  # (seconds) How often we check the core temperature.
-GPIO_PIN = 17  # Which GPIO pin you're using to control the fan.
-HIGH_PERCENT = 0.6
-LOW_PERCENT = 0.4
-TEST = False
 
 
 def get_temp():
@@ -26,41 +20,47 @@ def get_temp():
     Returns:
         float: The core temperature in degrees Celsius.
     """
-    output = subprocess.run(['vcgencmd', 'measure_temp'], capture_output=True)
+    output = subprocess.run(['vcgencmd', 'measure_temp'],
+                            check=True, capture_output=True)
     temp_str = output.stdout.decode()
     try:
         return float(temp_str.split('=')[1].split('\'')[0])
-    except (IndexError, ValueError):
-        raise RuntimeError('Could not parse temperature output.')
+    except (IndexError, ValueError) as parse_temp_output:
+        raise RuntimeError('Could not parse temperature output.')\
+              from parse_temp_output
 
 
-def get_voltage():
-    r = TEMP_MAX - TEMP_MIN  # delta consigne
-    dv = HIGH_PERCENT - LOW_PERCENT
-    step = dv / r
-    v = get_temp() - TEMP_MIN
-    if v <= 0:
+def get_voltage(params):
+    """ Compute voltage from cpu temp and parameters """
+    delta_t = params['temp_max'] - params['temp_min']  # delta consigne
+    delta_v = params['high_percent'] - params['low_percent']
+    step = delta_v / delta_t
+    computed_v = get_temp() - params['temp_min']
+    if computed_v <= 0:
         return 0
-    v = LOW_PERCENT + (v * step)
-    if v > 1:
+    computed_v = params['low_percent'] + (computed_v * step)
+    if computed_v > 1:
         return 1
-    return v
+    return computed_v
 
 
-def print_infos():
-    print(u'GPIO_PIN : \t{}'.format(GPIO_PIN))
-    print(u'SLEEP : \t{}s'.format(SLEEP_INTERVAL))
-    print(u'TEMP_MIN : \t{}°C'.format(TEMP_MIN))
-    print(u'TEMP_MAX : \t{}°C'.format(TEMP_MAX))
-    print(u'LOW_PERCENT : \t{}% ({}V)'.format(LOW_PERCENT, LOW_PERCENT*5))
-    print(u'HIGH_PERCENT : \t{}% ({}V)'.format(HIGH_PERCENT, HIGH_PERCENT*5))
+def print_infos(params):
+    """ Dump parameters, temperature and computed voltage """
+    print(u'gpio_pin : \t{}'.format(params['gpio_pin']))
+    print(u'SLEEP : \t{}s'.format(params['sleep_interval']))
+    print(u'temp_min : \t{}°C'.format(params['temp_min']))
+    print(u'temp_max : \t{}°C'.format(params['temp_max']))
+    print(u'low_percent : \t{}% ({}V)'.format(params['low_percent'],
+                                              params['low_percent']*5))
+    print(u'high_percent : \t{}% ({}V)'.format(params['high_percent'],
+                                               params['high_percent']*5))
     print(u'CPU_TEMP : \t{}°C'.format(get_temp()))
-    percent = get_voltage()
+    percent = get_voltage(params)
     print(u'VOLTAGE : \t{:.2f}% ({:.2f}V)'.format(percent, percent*5))
 
 
-def main():
-
+def get_args():
+    """ Parse args from command line """
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infos",
                         help="print parameters, tempcpu and voltage",
@@ -69,72 +69,104 @@ def main():
                         help="verbose",
                         action="store_true")
     parser.add_argument("-m", "--temp_min",
-                        help="TEMP_MIN", type=int)
+                        help="temp_min", type=int)
     parser.add_argument("-M", "--temp_max",
-                        help="TEMP_MAX", type=int)
+                        help="temp_max", type=int)
     parser.add_argument("-p", "--percent_low",
-                        help="LOW_PERCENT", type=float)
+                        help="low_percent", type=float)
     parser.add_argument("-P", "--percent_high",
-                        help="HIGH_PERCENT", type=float)
+                        help="high_percent", type=float)
+    parser.add_argument("-G", "--gpio_pin",
+                        help="temp_max", type=int)
     parser.add_argument("-t", "--test",
-                        help="""run TEST cycles and
+                        help="""run test cycles and
                                 display temperature and voltage""", type=int)
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    if args.infos:
-        print_infos()
-        exit(0)
 
-    global TEMP_MIN
-    global TEMP_MAX
-    global LOW_PERCENT
-    global HIGH_PERCENT
-    global TEST
+def load_params(args):
+    """ Load params with default value and line command args """
+
+    # Default parameter values
+
+    temp_min = 40  # Temperature (or lower) where fan voltage is 0.0
+    temp_max = 50  # Temperature (or higher) where van voltage is 1.0
+    sleep_interval = 5  # (seconds) How often we check the core temperature.
+    gpio_pin = 17  # Which GPIO pin you're using to control the fan.
+    high_percent = 0.6
+    low_percent = 0.4
+    test = False
 
     if args.temp_min:
-        TEMP_MIN = args.temp_min
+        temp_min = args.temp_min
     if args.temp_max:
-        TEMP_MAX = args.temp_max
+        temp_max = args.temp_max
     if args.percent_low:
-        LOW_PERCENT = args.percent_low
+        low_percent = args.percent_low
     if args.percent_high:
-        HIGH_PERCENT = args.percent_high
+        high_percent = args.percent_high
+    if args.gpio_pin:
+        gpio_pin = args.gpio_pin
 
     # Validate
-    if TEMP_MIN >= TEMP_MAX:
-        raise RuntimeError('TEMP_MIN must be less than TEMP_MAX')
+    if temp_min >= temp_max:
+        raise RuntimeError('temp_min must be less than temp_max')
+
+    # Load params
+    params = {
+              'temp_min': temp_min,
+              'temp_max': temp_max,
+              'low_percent': low_percent,
+              'high_percent': high_percent,
+              'test': test,
+              'sleep_interval': sleep_interval,
+              'gpio_pin': gpio_pin,
+              }
+    return params
+
+
+def main():
+    """ Main loop """
+
+    args = get_args()
+    params = load_params(args)
+
+    if args.infos:
+        print_infos(params)
+        sys.exit(0)
 
     if args.verbose:
-        print_infos()
+        print_infos(params)
 
     count = 1
     if args.test:
         count = args.test
-        TEST = True
+        test = True
 
     # exit(0)
 
-    fan = PWMLED(GPIO_PIN)
+    factory = RPiGPIOFactory()
+    fan = PWMLED(params['gpio_pin'], pin_factory=factory)
     fan.on()
     fan_on = False
     fan.value = 0
-    temp_seuil = (TEMP_MAX + TEMP_MIN) / 2
+    temp_seuil = (params['temp_max'] + params['temp_min']) / 2
 
     while count > 0:
-        if TEST:
+        if test:
             count += -1
         temp = get_temp()
         if not fan_on and temp > temp_seuil:
             fan_on = True
-        if temp < TEMP_MIN:
+        if temp < params['temp_min']:
             fan_on = False
             fan.value = 0
         if fan_on:
-            voltage = get_voltage()
+            voltage = get_voltage(params)
             fan.value = voltage
-        if TEST:
+        if test:
             print(u'temp: {} voltage: {}'.format(temp, fan.value), flush=True)
-        time.sleep(SLEEP_INTERVAL)
+        time.sleep(params['sleep_interval'])
 
 
 if __name__ == '__main__':
