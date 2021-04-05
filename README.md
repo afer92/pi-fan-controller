@@ -53,11 +53,11 @@ optional arguments:
 >                         / |
 >                        /  |
 >          0 ___________/  TEMP_MIN (default: 40)
->          
-> threshold : (TEMP_MAX + TEMP_MIN)/2
-> 
-> fan start = temp_cpu > threshold (default: 45°C)
-> fan stop  = temp_cpu < TEMP_MIN (default: 40°C)
+>         
+>          threshold : (TEMP_MAX + TEMP_MIN)/2
+>
+>          fan start = temp_cpu > threshold (default: 45°C)
+>          fan stop  = temp_cpu < TEMP_MIN (default: 40°C)
 
 ## supervisor
 
