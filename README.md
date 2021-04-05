@@ -40,19 +40,24 @@ optional arguments:
 
 ## Parameters
 
->          1                         ___________
+>          1 ( 5V )                  ___________
 >                                  /
->          PERCENT_HIGH-----------/
+>          PERCENT_HIGH-----------/ (default: 0.6)
 >                                /|
 >                               / |
 >                              /  |
 >                             /   |
->                            /   TEMP_MAX
->          PERCENT_LOW------/
+>                            /   TEMP_MAX (default: 50)
+>          PERCENT_LOW------/  (default: 0.4)
 >                          /|
 >                         / |
 >                        /  |
->          0 ___________/  TEMP_MIN
+>          0 ___________/  TEMP_MIN (default: 40)
+>          
+> threshold : (TEMP_MAX + TEMP_MIN)/2
+> 
+> fan start = temp_cpu > threshold (default: 45°C)
+> fan stop  = temp_cpu < TEMP_MIN (default: 40°C)
 
 ## supervisor
 
