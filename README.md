@@ -73,8 +73,8 @@ fancontrol.sh
 ```
 #!/bin/sh
 
-# temp_min = 40, temp_max = 50
-# percent_low = 0.4, percent_high = 0.6
+# temp_min = 40°C, temp_max = 50°C
+# percent_low = 0.4% (2.0V), percent_high = 0.6% (3.0V)
 # 60 loops with 5s sleep
 # run for 5 mn (5*60 seconds)
 
