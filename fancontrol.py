@@ -104,7 +104,7 @@ def get_args():
     parser.add_argument("-P", "--percent_high",
                         help="percent_high", type=float)
     parser.add_argument("-G", "--gpio_pin",
-                        help="temp_max", type=int)
+                        help="gpio_pin", type=int)
     parser.add_argument("-t", "--test",
                         help="""run test cycles and
                                 display temperature and voltage""", type=int)
