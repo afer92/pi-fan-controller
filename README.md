@@ -38,6 +38,22 @@ optional arguments:
   -t TEST, --test TEST  run test cycles and display temperature and voltage
   ```
 
+## Parameters
+
+>          1                         ___________
+>                                  /
+>          PERCENT_HIGH-----------/
+>                                /|
+>                               / |
+>                              /  |
+>                             /   |
+>                            /   TEMP_MAX
+>          PERCENT_LOW------/
+>                          /|
+>                         / |
+>                        /  |
+>          0 ___________/  TEMP_MIN
+
 ## supervisor
 
 ```
@@ -70,8 +86,8 @@ GPIO_PIN :      17
 SLEEP :         5s
 TEMP_MIN :      40°C
 TEMP_MAX :      45°C
-LOW_PERCENT :   0.4% (2.0V)
-HIGH_PERCENT :  0.6% (3.0V)
+PERCENT_LOW :   0.4% (2.0V)
+PERCENT_HIGH :  0.6% (3.0V)
 CPU_TEMP :      41.3°C
 VOLTAGE :       0.45% (2.26V)
 temp: 42.3 voltage: 0.0
