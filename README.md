@@ -15,27 +15,30 @@ found on our guide: [Control Your Raspberry Pi Fan (and Temperature) with Python
 ## Usage
 
 ```sh
- $ ./fancontrol.py -h
+$ ./fancontrol.py -h
 usage: fancontrol.py [-h] [-i] [-v] [-V] [-m TEMP_MIN] [-M TEMP_MAX]
                      [-p PERCENT_LOW] [-P PERCENT_HIGH] [-G GPIO_PIN]
-                     [-t TEST]
+                     [-t TEST] [-s SLEEP_INTERVAL]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i, --infos           print parameters, tempcpu and voltage
-  -v, --verbose         verbose
-  -V, --version         program version
+  -i, --infos           print parameters, tempcpu and voltage (default: False)
+  -v, --verbose         verbose (default: False)
+  -V, --version         program version (default: False)
   -m TEMP_MIN, --temp_min TEMP_MIN
-                        temp_min
+                        temp_min °C (default: 40)
   -M TEMP_MAX, --temp_max TEMP_MAX
-                        temp_max
+                        temp_max °C (default: 50)
   -p PERCENT_LOW, --percent_low PERCENT_LOW
-                        percent_low
+                        percent_low % (default: 0.4)
   -P PERCENT_HIGH, --percent_high PERCENT_HIGH
-                        percent_high
+                        percent_high % (default: 0.6)
   -G GPIO_PIN, --gpio_pin GPIO_PIN
-                        gpio_pin
+                        gpio_pin (default: 17)
   -t TEST, --test TEST  run test cycles and display temperature and voltage
+                        (default: False)
+  -s SLEEP_INTERVAL, --sleep_interval SLEEP_INTERVAL
+                        sleep_interval seconds (default: 5)
   ```
 
 ## Parameters
