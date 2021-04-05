@@ -49,8 +49,8 @@ optional arguments:
 >                                /|
 >                               / |
 >                              /  |
->                             /   |
->                            /   TEMP_MAX (default: 50)
+>                             /  TEMP_MAX (default: 50)
+>                            /
 >          PERCENT_LOW------/  (default: 0.4)
 >                          /|
 >                         / |
