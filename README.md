@@ -34,7 +34,7 @@ optional arguments:
   -P PERCENT_HIGH, --percent_high PERCENT_HIGH
                         percent_high
   -G GPIO_PIN, --gpio_pin GPIO_PIN
-                        temp_max
+                        gpio_pin
   -t TEST, --test TEST  run test cycles and display temperature and voltage
   ```
 
