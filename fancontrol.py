@@ -85,38 +85,6 @@ def print_infos(params: dict):
 
 def get_args():
     """ Parse args from command line """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--infos",
-                        help="print parameters, tempcpu and voltage",
-                        action="store_true")
-    parser.add_argument("-v", "--verbose",
-                        help="verbose",
-                        action="store_true")
-    parser.add_argument("-V", "--version",
-                        help="program version",
-                        action="store_true")
-    parser.add_argument("-m", "--temp_min",
-                        help="temp_min", type=int)
-    parser.add_argument("-M", "--temp_max",
-                        help="temp_max", type=int)
-    parser.add_argument("-p", "--percent_low",
-                        help="percent_low", type=float)
-    parser.add_argument("-P", "--percent_high",
-                        help="percent_high", type=float)
-    parser.add_argument("-G", "--gpio_pin",
-                        help="gpio_pin", type=int)
-    parser.add_argument("-t", "--test",
-                        help="""run test cycles and
-                                display temperature and voltage""", type=int)
-    return parser.parse_args()
-
-
-def load_params(args) -> dict:
-    """ Load params with default value and line command args
-
-    Returns:
-        params as a dictionnary
-    """
 
     # Default parameter values
 
@@ -128,30 +96,58 @@ def load_params(args) -> dict:
     percent_low = 0.4
     test = False
 
-    if args.temp_min:
-        temp_min = args.temp_min
-    if args.temp_max:
-        temp_max = args.temp_max
-    if args.percent_low:
-        percent_low = args.percent_low
-    if args.percent_high:
-        percent_high = args.percent_high
-    if args.gpio_pin:
-        gpio_pin = args.gpio_pin
+    parseFormatter = argparse.ArgumentDefaultsHelpFormatter
+    parser = argparse.ArgumentParser(formatter_class=parseFormatter)
+    parser.add_argument("-i", "--infos",
+                        help="print parameters, tempcpu and voltage",
+                        action="store_true")
+    parser.add_argument("-v", "--verbose",
+                        help="verbose",
+                        action="store_true")
+    parser.add_argument("-V", "--version",
+                        help="program version",
+                        action="store_true")
+    parser.add_argument("-m", "--temp_min",
+                        help="temp_min °C", type=int, default=temp_min)
+    parser.add_argument("-M", "--temp_max",
+                        help="temp_max °C", type=int, default=temp_max)
+    parser.add_argument("-p", "--percent_low",
+                        help="percent_low %%", type=float, default=percent_low)
+    parser.add_argument("-P", "--percent_high",
+                        help="percent_high %%", type=float,
+                        default=percent_high)
+    parser.add_argument("-G", "--gpio_pin", default=gpio_pin,
+                        help="gpio_pin", type=int)
+    parser.add_argument("-t", "--test",
+                        help="""run test cycles and
+                                display temperature and voltage""",
+                        type=int, default=test)
+    parser.add_argument("-s", "--sleep_interval",
+                        type=int, help="sleep_interval seconds",
+                        default=sleep_interval)
+    return parser.parse_args()
+
+
+def load_params(args) -> dict:
+    """ Load params with default value and line command args
+
+    Returns:
+        params as a dictionnary
+    """
 
     # Validate
-    if temp_min >= temp_max:
+    if args.temp_min >= args.temp_max:
         raise RuntimeError('temp_min must be less than temp_max')
 
     # Load params
     params = {
-              'temp_min': temp_min,
-              'temp_max': temp_max,
-              'percent_low': percent_low,
-              'percent_high': percent_high,
-              'test': test,
-              'sleep_interval': sleep_interval,
-              'gpio_pin': gpio_pin,
+              'temp_min': args.temp_min,
+              'temp_max': args.temp_max,
+              'percent_low': args.percent_low,
+              'percent_high': args.percent_high,
+              'test': args.test,
+              'sleep_interval': args.sleep_interval,
+              'gpio_pin': args.gpio_pin,
               }
     return params
 
