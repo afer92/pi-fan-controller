@@ -51,12 +51,12 @@ def get_voltage(params: dict) -> float:
         float: 0.0 to 1.0
     """
     delta_t = params['temp_max'] - params['temp_min']  # delta consigne
-    delta_v = params['high_percent'] - params['low_percent']
+    delta_v = params['percent_high'] - params['percent_low']
     step = delta_v / delta_t
     computed_v = get_temp() - params['temp_min']
     if computed_v <= 0:
         return 0
-    computed_v = params['low_percent'] + (computed_v * step)
+    computed_v = params['percent_low'] + (computed_v * step)
     if computed_v > 1:
         return 1
     return computed_v
@@ -74,10 +74,10 @@ def print_infos(params: dict):
     print(u'SLEEP : \t{}s'.format(params['sleep_interval']))
     print(u'temp_min : \t{}°C'.format(params['temp_min']))
     print(u'temp_max : \t{}°C'.format(params['temp_max']))
-    print(u'low_percent : \t{}% ({}V)'.format(params['low_percent'],
-                                              params['low_percent']*5))
-    print(u'high_percent : \t{}% ({}V)'.format(params['high_percent'],
-                                               params['high_percent']*5))
+    print(u'percent_low : \t{}% ({}V)'.format(params['percent_low'],
+                                              params['percent_low']*5))
+    print(u'percent_high : \t{}% ({}V)'.format(params['percent_high'],
+                                               params['percent_high']*5))
     print(u'CPU_TEMP : \t{}°C'.format(get_temp()))
     percent = get_voltage(params)
     print(u'VOLTAGE : \t{:.2f}% ({:.2f}V)'.format(percent, percent*5))
@@ -100,9 +100,9 @@ def get_args():
     parser.add_argument("-M", "--temp_max",
                         help="temp_max", type=int)
     parser.add_argument("-p", "--percent_low",
-                        help="low_percent", type=float)
+                        help="percent_low", type=float)
     parser.add_argument("-P", "--percent_high",
-                        help="high_percent", type=float)
+                        help="percent_high", type=float)
     parser.add_argument("-G", "--gpio_pin",
                         help="temp_max", type=int)
     parser.add_argument("-t", "--test",
@@ -124,8 +124,8 @@ def load_params(args) -> dict:
     temp_max = 50  # Temperature (or higher) where van voltage is 1.0
     sleep_interval = 5  # (seconds) How often we check the core temperature.
     gpio_pin = 17  # Which GPIO pin you're using to control the fan.
-    high_percent = 0.6
-    low_percent = 0.4
+    percent_high = 0.6
+    percent_low = 0.4
     test = False
 
     if args.temp_min:
@@ -133,9 +133,9 @@ def load_params(args) -> dict:
     if args.temp_max:
         temp_max = args.temp_max
     if args.percent_low:
-        low_percent = args.percent_low
+        percent_low = args.percent_low
     if args.percent_high:
-        high_percent = args.percent_high
+        percent_high = args.percent_high
     if args.gpio_pin:
         gpio_pin = args.gpio_pin
 
@@ -147,8 +147,8 @@ def load_params(args) -> dict:
     params = {
               'temp_min': temp_min,
               'temp_max': temp_max,
-              'low_percent': low_percent,
-              'high_percent': high_percent,
+              'percent_low': percent_low,
+              'percent_high': percent_high,
               'test': test,
               'sleep_interval': sleep_interval,
               'gpio_pin': gpio_pin,
