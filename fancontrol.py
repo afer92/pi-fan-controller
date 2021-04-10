@@ -157,6 +157,7 @@ def main():
 
     args = get_args()
     params = load_params(args)
+    test = False
 
     if args.version:
         print(u'Version : {}'.format(__version__))
